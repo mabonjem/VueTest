@@ -1,18 +1,27 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Test></Test>
+   
+    <Event></Event>
+    
    </div>
 </template>
 
 <script>
+
+ //import DelivaryNote from './components/DelivaryNote';
+// import Test from './components/Test';
+ import Event from './components/Eevnt';
+  
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
  
- import Test from './components/Test'
 
 export default {
   name: 'app',
+  
   components: {
-     Test
+  //   Test , DelivaryNote , 
+  Event
   }
 }
 </script>
