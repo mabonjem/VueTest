@@ -75,7 +75,7 @@ export default {
     try {
 
        // eslint-disable-next-line no-unused-vars
-       var eventId =  new URL(window.Location).searchParams("EventID");
+       var eventId =  new  URL(location.href).searchParams.get("EventID");
       // eslint-disable-next-line no-unused-vars
       const config = {
         headers: {
@@ -105,6 +105,7 @@ export default {
     }
     // eslint-disable-next-line no-unused-vars
   }
+
 };
 </script>
 
