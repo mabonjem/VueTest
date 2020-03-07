@@ -1,5 +1,8 @@
 <template>
-  <div class="Eevnt">
+
+  <div class="Eevnt" v-if="AllData != null">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <div class="event-details-page">
       <h2 class="heading-2">{{AllData.Title}}</h2>
       <div class="event-details-page-widget">
@@ -27,10 +30,10 @@
 
          <div> {{AllData.Description}} </div>
 
-          <div v-for="val in array" :key="val">
+          <div v-for="val in array" :key="val.Id">
             <div class="form-group-inline">
               <div class="form-check">
-                <input class="radio" id="radio-3" name="rd" type="radio" />
+                <input class="radio" :value="val.Id" name="rd" type="radio" v-model="picked" />
                 <label tabindex="5" for="radio-3" class="radio-label">{{val.Title}}</label>
                 <div> {{val.SessionTime}} </div>
                 <div> Number Of Attendees : {{val.NumberOfAttendees}} </div>
@@ -38,7 +41,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary">Sign in</button>
+          <button type="submit"  @click="bookItem"  v-bind:disabled="isButtonDisabled"   class="btn btn-primary">Sign in</button>
         </div>
       </div>
     </div>
@@ -58,17 +61,24 @@ export default {
   data() {
     return {
       AllData: null,
-      //  Title: null,
-      //  ImageURL: "// 125 ",
-      //  FromDate: null ,
-      //  ToDate: "Date To",
-      //  Location: "Ryaidh",
+      isButtonDisabled : false,
+     // picked : null , 
       array: null
     };
   },
   
   methods: {
+    bookItem () 
+    {
+       alert(this.picked);
+       var  items =  [
+          {"key": "sessionId" , "value" : this.picked}
+       ];
+       createListItem(items ,"Register" , "/"  ); 
+    }, 
+   
     
+
   },
 
   async created() {
@@ -84,7 +94,7 @@ export default {
         }
       };
       const res = await axios.get(
-        // "http://stcs-portaldevt:8080/en/STCsEvents/_api/web/lists/GetByTitle('CalendarEvents')/items?$filter=ID%20eq%20" + eventId,
+        // "http://stcs-portaldevt:8080/en/STCsEvents/_api/web/lists/GetByTitle('CalendarEvents')/items?$filter=ID eq " + eventId,
         "https://demo5445955.mockable.io/Test123",
         config
       );
@@ -94,11 +104,12 @@ export default {
 
            // eslint-disable-next-line no-unused-vars
      const res2 = await axios.get(
-        // "http://stcs-portaldevt:8080/en/STCsEvents/_api/web/lists/GetByTitle('CalendarEvents')/items?$filter=ID%20eq%20125",
+        // "http://stcs-portaldevt:8080/en/STCsEvents/_api/web/lists/GetByTitle('CalendarEvents')/items?$filter=ID eq " + eventId,
         "https://demo5445955.mockable.io/Time",
         config
       );
       this.array = res2.data.d.results;
+       
       
     } catch (e) {
       alert(e);
@@ -107,6 +118,37 @@ export default {
   }
 
 };
+
+
+
+
+function createListItem( listItems , listName , siteUrl) {
+
+    var clientContext = new SP.ClientContext(siteUrl);
+    var oList = clientContext.get_web().get_lists().getByTitle('Register');
+        
+    var itemCreateInfo = new SP.ListItemCreationInformation();
+    this.oListItem = oList.addItem(itemCreateInfo);
+        listItems.forEach(element => {
+           oListItem.set_item( element['key'], element['value']);
+        });
+          oListItem.update();
+
+    clientContext.load(oListItem);
+        
+    clientContext.executeQueryAsync(Function.createDelegate(this, this.onQuerySucceeded), Function.createDelegate(this, this.onQueryFailed));
+}
+
+function onQuerySucceeded() {
+
+    alert('Item created: ' + oListItem.get_id());
+}
+
+function onQueryFailed(sender, args) {
+
+    alert('Request failed. ' + args.get_message() + '\n' + args.get_stackTrace());
+}
+
 </script>
 
 

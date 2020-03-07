@@ -1,16 +1,16 @@
 <template>
   <div id="app">
    
-    <Event></Event>
+    <DelivaryNote></DelivaryNote>
     
    </div>
 </template>
 
 <script>
 
- //import DelivaryNote from './components/DelivaryNote';
+ import DelivaryNote from './components/DelivaryNote';
 // import Test from './components/Test';
- import Event from './components/Eevnt';
+// import Event from './components/Eevnt';
   
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
@@ -20,8 +20,8 @@ export default {
   name: 'app',
   
   components: {
-  //   Test , DelivaryNote , 
-  Event
+  //   Test ,Event  , 
+  DelivaryNote
   }
 }
 </script>
